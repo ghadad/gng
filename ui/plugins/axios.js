@@ -1,6 +1,6 @@
 export default function ({
   $axios,
-  store
+  store,
 }) {
   if (store.state.api.config.config) {
     $axios.setBaseURL(store.state.api.config.config.appSettings.env.API_URL)

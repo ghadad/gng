@@ -1,9 +1,10 @@
 class PingController {
-  ping (request, reply) {
+  ping(request, reply, next) {
+    throw "121212";
     reply.send({
-      result: 'pong'
-    })
+      result: "pong",
+    });
   }
 }
 
-module.exports = new PingController()
+module.exports = new PingController();

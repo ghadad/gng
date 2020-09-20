@@ -7,7 +7,7 @@ const buildApi = async function () {
   const fastify = require('fastify')({
     logger: process.env.NODE_ENV !== 'test'
   })
-  const jwtOptions = require('./plugins/jwt/jwt-options')
+//  const jwtOptions = require('./plugins/jwt/jwt-options')
   const oauthOptions = require('./plugins/oauth/options')
   await fastify
     .setErrorHandler(require('./errors/error-handler'))
@@ -15,16 +15,17 @@ const buildApi = async function () {
     .register(require('fastify-swagger'), require('./plugins/swagger/swagger-options'))
     .register(require('fastify-cookie'))
     .register(require('fastify-cors'), require('./plugins/cors/cors-options'))
-    .register(require('fastify-jwt'), jwtOptions)
+ //   .register(require('fastify-jwt'), jwtOptions)
     .register(multer.contentParser)
-    .register(require('./plugins/mongoose/fastify-mongoose'), require('./plugins/mongoose/mongoose-options'))
-    .register(require('./plugins/ws/fastify-ws'), {
+ //   .register(require('./plugins/mongoose/fastify-mongoose'), require('./plugins/mongoose/mongoose-options'))
+   /* .register(require('./plugins/ws/fastify-ws'), {
       jwt: jwtOptions,
       pingInterval: require('./plugins/ws/scaleout-options').pingInterval,
       scaleout: require('./plugins/ws/scaleout-options').scaleout,
       handler: require('./routes/ws/ws-handler'),
       dispatcher: require('./routes/ws/ws-dispatcher')
     })
+    */
   if (oauthOptions.facebook &&
     oauthOptions.facebook.credentials &&
     oauthOptions.facebook.credentials.client &&

@@ -1,9 +1,7 @@
-const config = require('../../../config')
-
 class ConfigController {
-  get (request, reply) {
-    reply.send(config)
+  get(request, reply) {
+    reply.send(request.__app.config);
   }
 }
 
-module.exports = new ConfigController()
+module.exports = new ConfigController();

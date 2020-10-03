@@ -1,20 +1,27 @@
 <template>
   <div>
     <h1>Index</h1>
-    state:{{ $store.state }}
     <nuxt-link to="profile">profile</nuxt-link>
+    <nuxt-link to="/admin/">Admin panel</nuxt-link>
+    state:{{ $store.state }}
   </div>
 </template>
 <script>
 export default {
-  fetch({ store }) {
+  async fetch({ store, env }) {
     store.dispatch("reset");
+    store.commit("config/set", env);
   },
-
+  async asyncData({ $axios, store, env }) {
+    console.log("env2", env, store);
+    const appSetting = await $axios.$get(env.apiUrl + "/config/get");
+    return { appSetting, env };
+  },
   async mounted() {
-    this.$store.commit("config/get");
-    await this.$store.commit("increment", 1222);
+    let cfg = await this.$axios.$get(this.env.apiUrl + "/config/get");
+    await this.$store.commit(this.env.apiUrl, 1222);
     await this.$store.dispatch("inc", 18);
+    this.$store.commit("config/set", cfg);
   },
 };
 </script>

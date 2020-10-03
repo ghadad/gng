@@ -1,12 +1,18 @@
 module.exports = {
-  mode: "universal",
-  //mode: 'spa',
+  env: {
+    baseUrl: process.env.BASE_URL || "http://localhost:3000",
+    apiUrl: process.env.API_URL,
+  },
+  telemetry: false,
   srcDir: "ui",
   router: {
-    base: "/gng/",
+    base: process.env.NODE_ENV == "development" ? "/dev/gng/" : "/gng",
   },
-  buildModules: [
-    // Simple usage
-    "@nuxtjs/vuetify",
+  buildModules: ["@nuxtjs/vuetify"],
+  modules: ["@nuxtjs/axios"],
+  plugins: [
+    { src: "~/plugins/vuex-persist", ssr: false },
+    { src: "~/plugins/settings" },
+    { src: "~/plugins/lodash" },
   ],
 };

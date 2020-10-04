@@ -20,13 +20,14 @@
       <v-col>
         <v-row align="center">
           <v-row v-if="allProps" justify="space-around">
-            <v-card v-for="(gv, gk) in groups">
+            <v-card v-for="(gv, gk) in groups" :key="gk">
               <v-card-text>
                 <h3>{{ gk }}</h3>
                 <v-checkbox
-                  v-for="(propV, propk) in gv"
-                  :label="propV.prop"
-                  v-model="allProps[propV.prop]"
+                  v-for="{ prop } in gv"
+                  :key="`prop-${index}`"
+                  :label="prop"
+                  v-model="allProps[prop]"
                 ></v-checkbox>
               </v-card-text>
             </v-card>

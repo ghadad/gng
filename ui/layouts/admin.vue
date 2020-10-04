@@ -19,7 +19,7 @@
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
         <v-toolbar-title
-          ><v-btn text flat x-large to="/admin"
+          ><v-btn x-large to="/admin"
             ><h1>Greet and gift - Admin panel</h1></v-btn
           ></v-toolbar-title
         >

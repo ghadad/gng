@@ -83,19 +83,19 @@ const buildApi = async function () {
           request.cookies.token,
           jwtOptions
         );
+        console.log(user);
         request.user = user;
       } else {
         await request.jwtVerify(jwtOptions);
       }
     })
     .decorate("verifyToken", async (request, reply) => {
-      const userService = require("./services/user/user-service");
-
-      await userService.verify(request.user.user);
+      //    const userService = require("./services/user/user-service");
+      //   await userService.verify(request.user.user);
     })
     .decorate("admin", async (request, reply) => {
-      const userService = require("./services/user/user-service");
-      await userService.isAdmin(request.user.user);
+      //  const userService = require("./services/user/user-service");
+      //   await userService.isAdmin(request.user.user);
     })
     .after(() => {
       // register routes

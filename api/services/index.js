@@ -3,5 +3,6 @@ module.exports = function (app) {
     user: require("./user")(app),
     line: require("./line")(app),
     greet: require("./greet")(app),
+    session: require("./session")(app),
   };
 };

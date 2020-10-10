@@ -37,10 +37,19 @@ class CouchModel {
     });
   }
 
+  async upsert() {
+    this.data.cretaed = __app.ts();
+    return await couchDb.upsert(this.modelName, this.data);
+  }
+
   async update() {}
 
-  async get() {}
-  async delete() {}
+  async get() {
+    return await couchDb.get(this.modelName, this.data._id);
+  }
+  async delete() {
+    return await couchDb.delete(this.modelName, this.data._id);
+  }
   static async query() {}
   static async getById(db, id) {
     return await couchDb.get(db, id);

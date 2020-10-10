@@ -44,6 +44,7 @@
       <v-container id="main-container">
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="8">
+            <error-alert />
             <router-view />
           </v-col>
         </v-row>
@@ -53,15 +54,14 @@
 </template>
 
 <script>
+import errorAlert from "../components/errorAlert.vue";
 export default {
-  props: {
-    source: String,
+  components: { errorAlert },
+  errorCaptured: function (err, component, details) {
+    this.$store.commit("setError", err);
   },
-};
-</script>
-<script>
-export default {
   created() {
+    this.$i18n.locale = "he";
     this.$vuetify.rtl = true;
   },
 };

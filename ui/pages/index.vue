@@ -19,9 +19,6 @@ export default {
   },
   async mounted() {
     let cfg = await this.$axios.$get(this.env.apiUrl + "/config/get");
-    await this.$store.commit(this.env.apiUrl, 1222);
-    await this.$store.dispatch("inc", 18);
-    this.$store.commit("config/set", cfg);
   },
 };
 </script>

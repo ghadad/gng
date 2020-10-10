@@ -1,12 +1,18 @@
-export default function ({ $axios, store, env }) {
+export default function ({ $axios, store, env, redirect }) {
   $axios.setBaseURL(env.apiUrl);
 
   $axios.onRequest((config) => {
     // config.withCredentials = true
-    if (store.state.api.auth.token) {
-      config.headers.common.Authorization = `Bearer ${store.state.api.auth.token}`;
-      // config.headers.common.crossDomain = true
-      // config.header.common['Content-Type'] = 'application/json'
+    store.commit("setError", null);
+    console.log("Store:", store.state.auth);
+    if (store.state.auth.loginInfo.token) {
+      config.headers.common.Authorization = `Bearer ${store.state.auth.loginInfo.token}`;
+    }
+  });
+
+  $axios.onResponseError((error) => {
+    if (error.response && error.response.status === 500) {
+      return Promise.reject(error.response.data);
     }
   });
 }

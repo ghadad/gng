@@ -1,17 +1,8 @@
-class AuthController {
-  async register(request, reply) {
+class ContactController {
+  async add(request, reply) {
     const payload = request.body;
-    const user = await request.services.user.register(payload);
-    return user;
-    const userTokenized = userService.tokenizeUser(user);
-    const token = await reply.jwtSign({
-      user: userTokenized,
-    });
-    reply.send({
-      token,
-      user,
-      is_admin: userTokenized.is_admin,
-    });
+
+    reply.send({ ...request.user, ...payload });
   }
 
   async activate(request, reply) {
@@ -34,9 +25,9 @@ class AuthController {
     const user = await request.services.user.login(request.body);
     user.loginTime = __app.ts();
     user.isAdmin = false;
-    const token = await reply.jwtSign(user);
-    await request.services.session.save({ ...user, token: token });
-
+    const token = await reply.jwtSign({
+      user: user,
+    });
     reply.send({
       token,
       user,
@@ -44,11 +35,9 @@ class AuthController {
     });
   }
 
-  async logout(request, reply) {
-    console.log("request.user:", request.user);
-    if (request.user) await request.services.session.clear(request.user);
-
+  logout(request, reply) {
     reply.clearCookie("token", { path: "/" });
+
     reply.send({
       result: "ok",
     });
@@ -155,4 +144,4 @@ class AuthController {
   }
 }
 
-module.exports = new AuthController();
+module.exports = new ContactController();

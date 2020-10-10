@@ -83,15 +83,13 @@ const buildApi = async function () {
           request.cookies.token,
           jwtOptions
         );
-        console.log(user);
-        request.user = user;
+        request.user = request.services.user.frontUser(user);
       } else {
         await request.jwtVerify(jwtOptions);
       }
     })
     .decorate("verifyToken", async (request, reply) => {
-      //    const userService = require("./services/user/user-service");
-      //   await userService.verify(request.user.user);
+      await request.services.session.verify(request.user);
     })
     .decorate("admin", async (request, reply) => {
       //  const userService = require("./services/user/user-service");
@@ -102,7 +100,7 @@ const buildApi = async function () {
       const routes = require("./routes");
       routes.forEach((route) => {
         route.preValidation = [];
-        if (route.authenticate) {
+        if (route.authenticate !== false) {
           route.preValidation = [fastify.authenticate, fastify.verifyToken];
         }
         if (route.admin) {

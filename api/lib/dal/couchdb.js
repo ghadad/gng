@@ -3,8 +3,8 @@ const JSONStream = require("JSONStream"),
 
 const nano = require("nano");
 const CouchdbDAL = class {
-  constructor(config) {
-    this.config = config;
+  constructor(data) {
+    this.data = data;
     this.nano = null;
   }
 
@@ -109,9 +109,14 @@ const CouchdbDAL = class {
   }
 
   async delete(db, id, rev) {
-    const dbref = this.nano.db.use(db);
+    if (!rev) {
+      let doc = await this.get(db, id);
+      rev = doc._rev;
+    }
 
+    const dbref = this.nano.db.use(db);
     let res = await dbref.destroy(id, rev);
+
     return res;
   }
 
@@ -162,18 +167,16 @@ const CouchdbDAL = class {
   }
 
   async upsert(db, doc, options = {}) {
-    if (options.checkExist) {
-      if (doc._id) {
-        let existsDoc = await this.get(db, doc._id).catch((e) => e);
-
-        if (existsDoc._rev) {
-          doc._rev = existsDoc._rev;
-          doc.updated = __app.ts();
-        } else {
-          doc.created = __app.ts();
-        }
+    if (doc._id) {
+      let existsDoc = await this.get(db, doc._id).catch((e) => e);
+      if (existsDoc._rev) {
+        doc._rev = existsDoc._rev;
+        doc.updated = __app.ts();
+      } else {
+        doc.created = __app.ts();
       }
     }
+
     let res = await this.update(db, doc);
     return res;
   }

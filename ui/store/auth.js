@@ -1,7 +1,7 @@
 import cookies from "js-cookie";
 
 export const state = () => ({
-  loginInfo: null,
+  loginInfo: {},
 });
 
 export const mutations = {

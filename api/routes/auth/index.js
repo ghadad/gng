@@ -39,6 +39,7 @@ module.exports = [
   },
   {
     method: "POST",
+    authenticate: false,
     url: "/api/auth/login",
     schema: {
       body: authSchema.login.body,
@@ -48,6 +49,7 @@ module.exports = [
   {
     method: "POST",
     url: "/api/auth/logout",
+    authenticate: true,
     schema: {
       response: {
         200: authSchema.logout.response[200],

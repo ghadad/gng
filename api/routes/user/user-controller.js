@@ -35,8 +35,7 @@ class AuthController {
     user.loginTime = __app.ts();
     user.isAdmin = false;
     const token = await reply.jwtSign(user);
-    await request.services.session.save({ ...user, token: token });
-
+    await request.services.session.save({ ...user, ...token });
     reply.send({
       token,
       user,
@@ -44,11 +43,9 @@ class AuthController {
     });
   }
 
-  async logout(request, reply) {
-    console.log("request.user:", request.user);
-    if (request.user) await request.services.session.clear(request.user);
-
+  logout(request, reply) {
     reply.clearCookie("token", { path: "/" });
+
     reply.send({
       result: "ok",
     });

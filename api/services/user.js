@@ -1,4 +1,6 @@
 const userModel = require("../models/user");
+const sessionModel = require("../models/session");
+
 const bcrypt = require("bcrypt");
 const saltRounds = 5;
 
@@ -19,14 +21,18 @@ class User {
     const user = new userModel(data);
     await user.create();
     // await codeService.generateCode(user, "user_activation", !data.is_active);
-    return user;
+    return this.fronUser(user);
   }
 
   async login(data) {
     const user = await userModel.getById("user", data.email);
     const match = await bcrypt.compare(data.password, user.password);
-    if (match) return user;
+    if (match) return this.frontUser(user);
     throw new Error("password not match .. please try again");
+  }
+
+  frontUser(user) {
+    return { email: user.email, token: user.token };
   }
 }
 

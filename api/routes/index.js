@@ -4,4 +4,6 @@ module.exports = [
   ...require("./config"),
   ...require("./line"),
   ...require("./greet"),
+  ...require("./user"),
+  ...require("./contact"),
 ];

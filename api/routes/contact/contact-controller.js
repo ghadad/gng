@@ -1,146 +1,37 @@
 class ContactController {
-  async add(request, reply) {
+  async save(request, reply) {
     const payload = request.body;
+    let user = await request.services.user.get(request.user.email);
+    user.contacts = user.contacts || [];
+    let found = false;
+    if (request.params.pos && user.contacts[request.params.pos]) {
+      user.contacts[request.params.pos] = payload;
+    } else {
+      user.contacts.forEach((c) => {
+        if (
+          (c.email && c.email === payload.email) ||
+          (c.contactName && c.contactName === payload.contactName) ||
+          (c.mobileId && c.mobileId === payload.mobileId)
+        ) {
+          Object.assign(c, payload);
+          found = true;
+        }
+      });
+      if (!found) user.contacts.push(payload);
+    }
 
-    reply.send({ ...request.user, ...payload });
-  }
-
-  async activate(request, reply) {
-    const user = await userService.activate(
-      request.body.username,
-      request.body.token
-    );
-    const userTokenized = tokenizeUser(user);
-    const token = await reply.jwtSign({
-      user: userTokenized,
-    });
-    reply.send({
-      token,
-      user,
-      is_admin: userTokenized.is_admin,
-    });
-  }
-
-  async login(request, reply) {
-    const user = await request.services.user.login(request.body);
-    user.loginTime = __app.ts();
-    user.isAdmin = false;
-    const token = await reply.jwtSign({
-      user: user,
-    });
-    reply.send({
-      token,
-      user,
-      is_admin: user.isAdmin,
-    });
-  }
-
-  logout(request, reply) {
-    reply.clearCookie("token", { path: "/" });
-
-    reply.send({
-      result: "ok",
-    });
-  }
-
-  async reset(request, reply) {
-    await userService.reset(request.body.email, request.body.type);
-    reply.send({
-      result: "ok",
-    });
-  }
-
-  async updateUsername(request, reply) {
-    const payload = request.body;
-    const user = await userService.updateUsername(
-      payload.email,
-      payload.token,
-      payload.username
-    );
-    const userTokenized = tokenizeUser(user);
-    const token = await reply.jwtSign({
-      user: userTokenized,
-    });
-    reply.send({
-      token,
-      user,
-      is_admin: userTokenized.is_admin,
-    });
-  }
-
-  async updatePassword(request, reply) {
-    const payload = request.body;
-    const user = await userService.updatePassword(
-      payload.email,
-      payload.token,
-      payload.password,
-      payload.passwordConfirm
-    );
-    const userTokenized = tokenizeUser(user);
-    const token = await reply.jwtSign({
-      user: userTokenized,
-    });
-    reply.send({
-      token,
-      user,
-      is_admin: userTokenized.is_admin,
-    });
-  }
-
-  async updateAvatar(request, reply) {
-    const avatarUrl = request.body.avatar_url;
-    const user = await userService.updateAvatar(
-      request.user.user._id,
-      avatarUrl
-    );
-    const userTokenized = tokenizeUser(user);
-    const token = await reply.jwtSign({
-      user: userTokenized,
-    });
-    reply.send({
-      token,
-      user,
-      is_admin: userTokenized.is_admin,
-    });
-  }
-
-  async me(request, reply) {
-    const user = await userService.get({
-      id: request.user.user._id,
-    });
-    const userTokenized = tokenizeUser(user);
-    const token = await reply.jwtSign({
-      user: userTokenized,
-    });
-    reply.send({
-      user,
-      token,
-      is_admin: userTokenized.is_admin,
-    });
-  }
-
-  async get(request, reply) {
-    const user = await userService.get({
-      query: request.params.query,
-    });
+    await request.services.user.upsert(user);
     reply.send(user);
-  }
-
-  async getAll(request, reply) {
-    const user = await userService.getAll({
-      ids: request.body.ids,
-    });
-    reply.send(user);
-  }
-
-  async getPeers(request, reply) {
-    const users = await userService.getPeers(request.user.user._id);
-    reply.send(users);
   }
 
   async delete(request, reply) {
-    const result = await userService.delete(request.user.user._id);
-    reply.send(result);
+    let user = await request.services.user.get(request.user.email);
+    user.contacts = user.contacts || [];
+    if (user.contacts[request.params.pos]) {
+      user.contacts.splice(request.params.pos, 1);
+      await request.services.user.upsert(user);
+      reply.send(user);
+    }
   }
 }
 

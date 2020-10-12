@@ -6,36 +6,25 @@ module.exports = [
   {
     method: "POST",
     url: "/api/contact",
-    schema: contactSchema.add,
-    handler: contactController.add,
-  },
-  {
-    method: "GET",
-    url: "/api/contact",
-    schema: {
-      response: {
-        409: errorSchema.response[409],
-        500: errorSchema.response[500],
-      },
-    },
-    handler: contactController.reset,
+    schema: contactSchema.save,
+    handler: contactController.save,
   },
   {
     method: "PUT",
-    url: "/api/contact",
+    url: "/api/contact/:pos",
     schema: {
-      schema: contactSchema.add,
+      schema: contactSchema.save,
       response: {
         409: errorSchema.response[409],
         500: errorSchema.response[500],
       },
     },
-    handler: contactController.activate,
+    handler: contactController.save,
   },
   {
     authenticate: true,
     method: "DELETE",
-    url: "/api/contact",
+    url: "/api/contact/:pos",
     schema: {
       response: {
         409: errorSchema.response[409],

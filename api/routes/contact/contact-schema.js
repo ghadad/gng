@@ -15,7 +15,7 @@ const contact = S.object()
   );
 
 module.exports = {
-  add: {
+  save: {
     body: contact,
   },
 };

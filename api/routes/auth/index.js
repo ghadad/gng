@@ -6,6 +6,7 @@ module.exports = [
   {
     method: "POST",
     url: "/api/auth/register",
+    authenticate: false,
     schema: {
       body: authSchema.register.body,
     },

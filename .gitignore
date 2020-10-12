@@ -6,7 +6,10 @@ examples/systen.db/
 # local env files
 .env.local
 .env.*.local
-.env*
+.env
+.env.development
+.env.qa
+.env.prod
 
 # Log files
 npm-debug.log*

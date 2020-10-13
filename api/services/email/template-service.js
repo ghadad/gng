@@ -1,14 +1,13 @@
 const path = require('path')
 const fs = require('fs')
 const handlebars = require('handlebars')
-const config = require('../../../config')
 
 class TemplateService {
   render (template, model) {
     // add global model properties
-    model.platform = config.appSettings.name
-    model.email = config.emailSettings.supportEmail
-    model.codeValidityInMinutes = config.authSettings.codeValidityInMinutes
+    model.platform = __app.config.app.name;
+    model.email = __app.config.mail.supportEmail;
+    model.codeValidityInMinutes = __app.config.auth.codeValidityInMinutes
 
     // render
     const html = handlebars.compile(

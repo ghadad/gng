@@ -8,9 +8,11 @@ class ApiServer {
     ) {
       require("dotenv").config();
       require("dotenv").config({
-        path: __dirname + "../.env." + process.env.NODE_ENV,
+        path: __dirname + "/../.env." + process.env.NODE_ENV,
       });
+      console.log(process.env.NODE_ENV);
     }
+ 
     this.fastifyBuilder = require("../../api/api");
     this.fastify = null;
   }

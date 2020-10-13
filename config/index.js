@@ -1,7 +1,8 @@
 const config = {
-  appSettings: require("./app"),
-  authSettings: require("./auth"),
+  app: require("./app"),
+  auth: require("./auth"),
   greet: require("./greet"),
+  mail: require("./mail"),
 };
 
 module.exports = config;

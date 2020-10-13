@@ -24,6 +24,8 @@ const settings = {
   },
 };
 
+console.log(settings)
+
 if (settings.smtp && settings.smtp.auth && !settings.smtp.auth.user) {
   settings.smtp.auth = undefined;
 }

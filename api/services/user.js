@@ -1,7 +1,7 @@
 const userModel = require("../models/user");
 const sessionModel = require("../models/session");
 var uniqid = require("uniqid");
-const EmailFactory = require("./email/email-factory");
+const EmailService = require("./email/email-service");
 const bcrypt = require("bcrypt");
 const saltRounds = 5;
 
@@ -26,17 +26,17 @@ class User {
 
   async register(data) {
     await userModel.createDb("User");
-    console.log(EmailFactory.getService());
+    EmailService.send({to:"ghadad@gmail.com",template:"XXXX",model:{}})
     data._id = data.email;
     if (data.password != data.passwordConfirm)
       throw new Error("password not equals to confirmPassword");
-
+  
     data.password = await bcrypt.hash(data.password, saltRounds);
     delete data.passwordConfirm;
     data.activationCode = uniqid("", Date.now());
     const user = new userModel(data);
     await user.create();
-
+   
     // await codeService.generateCode(user, "user_activation", !data.is_active);
 
     return { success: true };

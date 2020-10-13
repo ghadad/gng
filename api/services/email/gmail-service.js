@@ -1,24 +1,22 @@
 const nodemailer = require('nodemailer')
-const config = require('../../../config')
 const templateService = require('./template-service')
 
 class GmailService {
   constructor () {
-    if (!config.emailSettings.gmail) {
+    if (!__app.config.mail.gmail) {
       throw new Error('Missing GMAIL configuration')
     }
-    const settings = config.emailSettings.gmail
+   const settings = __app.config.mail.gmail;
     this.transporter = nodemailer.createTransport(settings)
   }
-
-  async send (params) {
-    const html = params.body || templateService.render(params.template, params.model)
+  async send (params={template:"user-activation.hbs"}) {
+    const html = params.body || templateService.render(params.template, params.model||{})
     const message = {
-      from: params.from || config.emailSettings.fromEmail,
-      to: params.to,
-      subject: params.subject,
+      from: "ghadad@gmail.com" ||params.from || __app.config.mail.fromEmail,
+      to: "ghadad@gmail.com" || params.to ,
+      subject: "subject" || params.subject,
       html,
-      attachments: params.attachments
+    //  attachments: params.attachments
     }
     await this.transporter.sendMail(message)
     message.type = 'gmail'
